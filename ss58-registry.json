@@ -14,8 +14,12 @@
 			"prefix": 0,
 			"network": "polkadot",
 			"displayName": "Polkadot Relay Chain",
-			"symbols": ["DOT"],
-			"decimals": [10],
+			"symbols": [
+				"DOT"
+			],
+			"decimals": [
+				10
+			],
 			"standardAccount": "*25519",
 			"website": "https://polkadot.network"
 		},
@@ -32,8 +36,12 @@
 			"prefix": 2,
 			"network": "kusama",
 			"displayName": "Kusama Relay Chain",
-			"symbols": ["KSM"],
-			"decimals": [12],
+			"symbols": [
+				"KSM"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://kusama.network"
 		},
@@ -59,8 +67,12 @@
 			"prefix": 5,
 			"network": "plasm",
 			"displayName": "Plasm Network",
-			"symbols": ["PLM"],
-			"decimals": [15],
+			"symbols": [
+				"PLM"
+			],
+			"decimals": [
+				15
+			],
 			"standardAccount": "*25519",
 			"website": "https://plasmnet.io"
 		},
@@ -68,8 +80,12 @@
 			"prefix": 6,
 			"network": "bifrost",
 			"displayName": "Bifrost",
-			"symbols": ["BNC"],
-			"decimals": [12],
+			"symbols": [
+				"BNC"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://bifrost.finance/"
 		},
@@ -77,8 +93,12 @@
 			"prefix": 7,
 			"network": "edgeware",
 			"displayName": "Edgeware",
-			"symbols": ["EDG"],
-			"decimals": [18],
+			"symbols": [
+				"EDG"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://edgewa.re"
 		},
@@ -86,8 +106,12 @@
 			"prefix": 8,
 			"network": "karura",
 			"displayName": "Acala Karura Canary",
-			"symbols": ["KAR"],
-			"decimals": [18],
+			"symbols": [
+				"KAR"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://acala.network/"
 		},
@@ -95,8 +119,12 @@
 			"prefix": 9,
 			"network": "reynolds",
 			"displayName": "Laminar Reynolds Canary",
-			"symbols": ["REY"],
-			"decimals": [18],
+			"symbols": [
+				"REY"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "http://laminar.network/"
 		},
@@ -104,8 +132,12 @@
 			"prefix": 10,
 			"network": "acala",
 			"displayName": "Acala",
-			"symbols": ["ACA"],
-			"decimals": [18],
+			"symbols": [
+				"ACA"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://acala.network/"
 		},
@@ -113,8 +145,12 @@
 			"prefix": 11,
 			"network": "laminar",
 			"displayName": "Laminar",
-			"symbols": ["LAMI"],
-			"decimals": [18],
+			"symbols": [
+				"LAMI"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "http://laminar.network/"
 		},
@@ -122,8 +158,12 @@
 			"prefix": 12,
 			"network": "polymesh",
 			"displayName": "Polymesh",
-			"symbols": ["POLYX"],
-			"decimals": [6],
+			"symbols": [
+				"POLYX"
+			],
+			"decimals": [
+				6
+			],
 			"standardAccount": "*25519",
 			"website": "https://polymath.network/"
 		},
@@ -140,8 +180,12 @@
 			"prefix": 14,
 			"network": "totem",
 			"displayName": "Totem",
-			"symbols": ["XTX"],
-			"decimals": [0],
+			"symbols": [
+				"XTX"
+			],
+			"decimals": [
+				0
+			],
 			"standardAccount": "*25519",
 			"website": "https://totemaccounting.com"
 		},
@@ -149,8 +193,12 @@
 			"prefix": 15,
 			"network": "synesthesia",
 			"displayName": "Synesthesia",
-			"symbols": ["SYN"],
-			"decimals": [12],
+			"symbols": [
+				"SYN"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://synesthesia.network/"
 		},
@@ -158,8 +206,12 @@
 			"prefix": 16,
 			"network": "kulupu",
 			"displayName": "Kulupu",
-			"symbols": ["KLP"],
-			"decimals": [12],
+			"symbols": [
+				"KLP"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://kulupu.network/"
 		},
@@ -176,8 +228,14 @@
 			"prefix": 18,
 			"network": "darwinia",
 			"displayName": "Darwinia Network",
-			"symbols": ["RING", "KTON"],
-			"decimals": [9, 9],
+			"symbols": [
+				"RING",
+				"KTON"
+			],
+			"decimals": [
+				9,
+				9
+			],
 			"standardAccount": "*25519",
 			"website": "https://darwinia.network/"
 		},
@@ -185,8 +243,12 @@
 			"prefix": 19,
 			"network": "geek",
 			"displayName": "GeekCash",
-			"symbols": ["GEEK"],
-			"decimals": [12],
+			"symbols": [
+				"GEEK"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://geekcash.org"
 		},
@@ -194,8 +256,12 @@
 			"prefix": 20,
 			"network": "stafi",
 			"displayName": "Stafi",
-			"symbols": ["FIS"],
-			"decimals": [12],
+			"symbols": [
+				"FIS"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://stafi.io"
 		},
@@ -203,8 +269,12 @@
 			"prefix": 21,
 			"network": "dock-testnet",
 			"displayName": "Dock Testnet",
-			"symbols": ["DCK"],
-			"decimals": [6],
+			"symbols": [
+				"DCK"
+			],
+			"decimals": [
+				6
+			],
 			"standardAccount": "*25519",
 			"website": "https://dock.io"
 		},
@@ -212,8 +282,12 @@
 			"prefix": 22,
 			"network": "dock-mainnet",
 			"displayName": "Dock Mainnet",
-			"symbols": ["DCK"],
-			"decimals": [6],
+			"symbols": [
+				"DCK"
+			],
+			"decimals": [
+				6
+			],
 			"standardAccount": "*25519",
 			"website": "https://dock.io"
 		},
@@ -230,8 +304,12 @@
 			"prefix": 24,
 			"network": "zero",
 			"displayName": "ZERO",
-			"symbols": ["PLAY"],
-			"decimals": [18],
+			"symbols": [
+				"PLAY"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://zero.io"
 		},
@@ -239,8 +317,12 @@
 			"prefix": 25,
 			"network": "zero-alphaville",
 			"displayName": "ZERO Alphaville",
-			"symbols": ["PLAY"],
-			"decimals": [18],
+			"symbols": [
+				"PLAY"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://zero.io"
 		},
@@ -248,8 +330,12 @@
 			"prefix": 26,
 			"network": "jupiter",
 			"displayName": "Jupiter",
-			"symbols": ["jDOT"],
-			"decimals": [10],
+			"symbols": [
+				"jDOT"
+			],
+			"decimals": [
+				10
+			],
 			"standardAccount": "*25519",
 			"website": "https://jupiter.patract.io"
 		},
@@ -257,8 +343,14 @@
 			"prefix": 27,
 			"network": "patract",
 			"displayName": "Patract",
-			"symbols": ["pDOT", "pKSM"],
-			"decimals": [10, 12],
+			"symbols": [
+				"pDOT",
+				"pKSM"
+			],
+			"decimals": [
+				10,
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://patract.network"
 		},
@@ -275,8 +367,12 @@
 			"prefix": 29,
 			"network": "cord",
 			"displayName": "Dhiway CORD Network",
-			"symbols": ["DCU"],
-			"decimals": [18],
+			"symbols": [
+				"DCU"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://dhiway.com/"
 		},
@@ -284,8 +380,12 @@
 			"prefix": 30,
 			"network": "phala",
 			"displayName": "Phala Network",
-			"symbols": ["PHA"],
-			"decimals": [12],
+			"symbols": [
+				"PHA"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://phala.network"
 		},
@@ -293,8 +393,12 @@
 			"prefix": 31,
 			"network": "litentry",
 			"displayName": "Litentry Network",
-			"symbols": ["LIT"],
-			"decimals": [12],
+			"symbols": [
+				"LIT"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://litentry.com/"
 		},
@@ -302,8 +406,12 @@
 			"prefix": 32,
 			"network": "robonomics",
 			"displayName": "Robonomics",
-			"symbols": ["XRT"],
-			"decimals": [9],
+			"symbols": [
+				"XRT"
+			],
+			"decimals": [
+				9
+			],
 			"standardAccount": "*25519",
 			"website": "https://robonomics.network"
 		},
@@ -320,8 +428,12 @@
 			"prefix": 34,
 			"network": "ares",
 			"displayName": "Ares Protocol",
-			"symbols": ["ARES"],
-			"decimals": [12],
+			"symbols": [
+				"ARES"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://www.aresprotocol.com/"
 		},
@@ -329,8 +441,12 @@
 			"prefix": 35,
 			"network": "vln",
 			"displayName": "Valiu Liquidity Network",
-			"symbols": ["USDv"],
-			"decimals": [15],
+			"symbols": [
+				"USDv"
+			],
+			"decimals": [
+				15
+			],
 			"standardAccount": "*25519",
 			"website": "https://valiu.com/"
 		},
@@ -338,8 +454,12 @@
 			"prefix": 36,
 			"network": "centrifuge",
 			"displayName": "Centrifuge Chain",
-			"symbols": ["RAD"],
-			"decimals": [18],
+			"symbols": [
+				"RAD"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://centrifuge.io/"
 		},
@@ -347,8 +467,12 @@
 			"prefix": 37,
 			"network": "nodle",
 			"displayName": "Nodle Chain",
-			"symbols": ["NODL"],
-			"decimals": [18],
+			"symbols": [
+				"NODL"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://nodle.io/"
 		},
@@ -356,8 +480,12 @@
 			"prefix": 38,
 			"network": "kilt",
 			"displayName": "KILT Chain",
-			"symbols": ["KILT"],
-			"decimals": [18],
+			"symbols": [
+				"KILT"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://kilt.io/"
 		},
@@ -365,8 +493,12 @@
 			"prefix": 39,
 			"network": "mathchain",
 			"displayName": "MathChain mainnet",
-			"symbols": ["MATH"],
-			"decimals": [18],
+			"symbols": [
+				"MATH"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://mathwallet.org"
 		},
@@ -374,8 +506,12 @@
 			"prefix": 40,
 			"network": "mathchain-testnet",
 			"displayName": "MathChain testnet",
-			"symbols": ["MATH"],
-			"decimals": [18],
+			"symbols": [
+				"MATH"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://mathwallet.org"
 		},
@@ -410,8 +546,12 @@
 			"prefix": 44,
 			"network": "chainx",
 			"displayName": "ChainX",
-			"symbols": ["PCX"],
-			"decimals": [8],
+			"symbols": [
+				"PCX"
+			],
+			"decimals": [
+				8
+			],
 			"standardAccount": "*25519",
 			"website": "https://chainx.org/"
 		},
@@ -419,8 +559,14 @@
 			"prefix": 45,
 			"network": "uniarts",
 			"displayName": "UniArts Network",
-			"symbols": ["UART", "UINK"],
-			"decimals": [12, 12],
+			"symbols": [
+				"UART",
+				"UINK"
+			],
+			"decimals": [
+				12,
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://uniarts.me"
 		},
@@ -446,8 +592,12 @@
 			"prefix": 48,
 			"network": "neatcoin",
 			"displayName": "Neatcoin Mainnet",
-			"symbols": ["NEAT"],
-			"decimals": [12],
+			"symbols": [
+				"NEAT"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://neatcoin.org"
 		},
@@ -455,8 +605,12 @@
 			"prefix": 63,
 			"network": "hydradx",
 			"displayName": "HydraDX",
-			"symbols": ["HDX"],
-			"decimals": [12],
+			"symbols": [
+				"HDX"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://hydradx.io"
 		},
@@ -464,8 +618,12 @@
 			"prefix": 65,
 			"network": "aventus",
 			"displayName": "AvN Mainnet",
-			"symbols": ["AVT"],
-			"decimals": [18],
+			"symbols": [
+				"AVT"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://aventus.io"
 		},
@@ -473,8 +631,12 @@
 			"prefix": 66,
 			"network": "crust",
 			"displayName": "Crust Network",
-			"symbols": ["CRU"],
-			"decimals": [12],
+			"symbols": [
+				"CRU"
+			],
+			"decimals": [
+				12
+			],
 			"standardAccount": "*25519",
 			"website": "https://crust.network"
 		},
@@ -482,8 +644,12 @@
 			"prefix": 69,
 			"network": "sora",
 			"displayName": "SORA Network",
-			"symbols": ["XOR"],
-			"decimals": [18],
+			"symbols": [
+				"XOR"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://sora.org"
 		},
@@ -491,10 +657,27 @@
 			"prefix": 252,
 			"network": "social-network",
 			"displayName": "Social Network",
-			"symbols": ["NET"],
-			"decimals": [18],
+			"symbols": [
+				"NET"
+			],
+			"decimals": [
+				18
+			],
 			"standardAccount": "*25519",
 			"website": "https://social.network"
+		},
+		{
+			"prefix": 2207,
+			"network": "bholdus",
+			"displayName": "Bholdus Network",
+			"symbols": [
+				"BHO"
+			],
+			"decimals": [
+				18
+			],
+			"standardAccount": "*25519",
+			"website": "https://bholdus.com"
 		}
 	]
 }
