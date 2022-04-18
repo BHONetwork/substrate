@@ -1,6 +1,6 @@
 // This file is part of Substrate.
 
-// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,7 +58,7 @@
 
 use codec::Encode;
 use frame_support::weights::Weight;
-use sp_runtime::traits;
+use sp_runtime::traits::{self, One, Saturating};
 
 #[cfg(any(feature = "runtime-benchmarks", test))]
 mod benchmarking;
@@ -70,10 +70,33 @@ mod mock;
 mod tests;
 
 pub use pallet::*;
-pub use pallet_mmr_primitives as primitives;
+pub use sp_mmr_primitives::{self as primitives, Error, LeafDataProvider, LeafIndex, NodeIndex};
+
+/// The most common use case for MMRs is to store historical block hashes,
+/// so that any point in time in the future we can receive a proof about some past
+/// blocks without using excessive on-chain storage.
+///
+/// Hence we implement the [LeafDataProvider] for [ParentNumberAndHash] which is a
+/// crate-local wrapper over [frame_system::Pallet]. Since the current block hash
+/// is not available (since the block is not finished yet),
+/// we use the `parent_hash` here along with parent block number.
+pub struct ParentNumberAndHash<T: frame_system::Config> {
+	_phanthom: sp_std::marker::PhantomData<T>,
+}
+
+impl<T: frame_system::Config> LeafDataProvider for ParentNumberAndHash<T> {
+	type LeafData = (<T as frame_system::Config>::BlockNumber, <T as frame_system::Config>::Hash);
+
+	fn leaf_data() -> Self::LeafData {
+		(
+			frame_system::Pallet::<T>::block_number().saturating_sub(One::one()),
+			frame_system::Pallet::<T>::parent_hash(),
+		)
+	}
+}
 
 pub trait WeightInfo {
-	fn on_initialize(peaks: u64) -> Weight;
+	fn on_initialize(peaks: NodeIndex) -> Weight;
 }
 
 #[frame_support::pallet]
@@ -125,7 +148,8 @@ pub mod pallet {
 			+ Default
 			+ codec::Codec
 			+ codec::EncodeLike
-			+ scale_info::TypeInfo;
+			+ scale_info::TypeInfo
+			+ MaxEncodedLen;
 
 		/// Data stored in the leaf nodes.
 		///
@@ -160,7 +184,7 @@ pub mod pallet {
 	/// Current size of the MMR (number of leaves).
 	#[pallet::storage]
 	#[pallet::getter(fn mmr_leaves)]
-	pub type NumberOfLeaves<T, I = ()> = StorageValue<_, u64, ValueQuery>;
+	pub type NumberOfLeaves<T, I = ()> = StorageValue<_, LeafIndex, ValueQuery>;
 
 	/// Hashes of the nodes in the MMR.
 	///
@@ -169,7 +193,7 @@ pub mod pallet {
 	#[pallet::storage]
 	#[pallet::getter(fn mmr_peak)]
 	pub type Nodes<T: Config<I>, I: 'static = ()> =
-		StorageMap<_, Identity, u64, <T as Config<I>>::Hash, OptionQuery>;
+		StorageMap<_, Identity, NodeIndex, <T as Config<I>>::Hash, OptionQuery>;
 
 	#[pallet::hooks]
 	impl<T: Config<I>, I: 'static> Hooks<BlockNumberFor<T>> for Pallet<T, I> {
@@ -228,7 +252,7 @@ where
 }
 
 impl<T: Config<I>, I: 'static> Pallet<T, I> {
-	fn offchain_key(pos: u64) -> sp_std::prelude::Vec<u8> {
+	fn offchain_key(pos: NodeIndex) -> sp_std::prelude::Vec<u8> {
 		(T::INDEXING_PREFIX, pos).encode()
 	}
 
@@ -239,7 +263,7 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 	/// all the leaves to be present.
 	/// It may return an error or panic if used incorrectly.
 	pub fn generate_proof(
-		leaf_index: u64,
+		leaf_index: LeafIndex,
 	) -> Result<(LeafOf<T, I>, primitives::Proof<<T as Config<I>>::Hash>), primitives::Error> {
 		let mmr: ModuleMmr<mmr::storage::OffchainStorage, T, I> = mmr::Mmr::new(Self::mmr_leaves());
 		mmr.generate_proof(leaf_index)
@@ -263,12 +287,17 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 				.log_debug("The proof has incorrect number of leaves or proof items."))
 		}
 
-		let mmr: ModuleMmr<mmr::storage::RuntimeStorage, T, I> = mmr::Mmr::new(proof.leaf_count);
+		let mmr: ModuleMmr<mmr::storage::OffchainStorage, T, I> = mmr::Mmr::new(proof.leaf_count);
 		let is_valid = mmr.verify_leaf_proof(leaf, proof)?;
 		if is_valid {
 			Ok(())
 		} else {
 			Err(primitives::Error::Verify.log_debug("The proof is incorrect."))
 		}
+	}
+
+	/// Return the on-chain MMR root hash.
+	pub fn mmr_root() -> <T as Config<I>>::Hash {
+		Self::mmr_root_hash()
 	}
 }
