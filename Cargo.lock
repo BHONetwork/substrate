@@ -10547,8 +10547,7 @@ dependencies = [
 [[package]]
 name = "ss58-registry"
 version = "1.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1230685dc82f8699110640244d361a7099c602f08bddc5c90765a5153b4881dc"
+source = "git+https://github.com/BHONetwork/ss58-registry.git?branch=bho-v1.11.0#08b05498db47673dea07dcb0479e47281c693a74"
 dependencies = [
  "Inflector",
  "proc-macro2",
