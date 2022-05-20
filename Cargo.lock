@@ -10339,12 +10339,10 @@ checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
 
 [[package]]
 name = "ss58-registry"
-version = "1.17.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b84a70894df7a73666e0694f44b41a9571625e9546fb58a0818a565d2c7e084"
+version = "1.11.0"
+source = "git+https://github.com/BHONetwork/ss58-registry?branch=bho-v1.11.0#08b05498db47673dea07dcb0479e47281c693a74"
 dependencies = [
  "Inflector",
- "num-format",
  "proc-macro2",
  "quote",
  "serde",
