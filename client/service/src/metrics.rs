@@ -61,13 +61,13 @@ impl PrometheusMetrics {
 				.const_label("name", name)
 				.const_label("version", version),
 			)?,
-			&registry,
+			registry,
 		)?
 		.set(1);
 
 		register(
 			Gauge::<U64>::new("substrate_node_roles", "The roles the node is running as")?,
-			&registry,
+			registry,
 		)?
 		.set(roles);
 
@@ -160,7 +160,7 @@ impl MetricsService {
 	) -> Result<Self, PrometheusError> {
 		let role_bits = match config.role {
 			Role::Full => 1u64,
-			Role::Light => 2u64,
+			// 2u64 used to represent light client role
 			Role::Authority { .. } => 4u64,
 		};
 
@@ -298,9 +298,10 @@ impl MetricsService {
 						UniqueSaturatedInto::<u64>::unique_saturated_into(num)
 					});
 
-				if let Some(best_seen_block) = best_seen_block {
-					metrics.block_height.with_label_values(&["sync_target"]).set(best_seen_block);
-				}
+				metrics
+					.block_height
+					.with_label_values(&["sync_target"])
+					.set(best_seen_block.unwrap_or(best_number));
 			}
 		}
 	}

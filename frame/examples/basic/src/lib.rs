@@ -318,7 +318,7 @@ const MILLICENTS: u32 = 1_000_000_000;
 // - assigns a dispatch class `operational` if the argument of the call is more than 1000.
 //
 // More information can be read at:
-//   - https://docs.substrate.io/v3/runtime/weights-and-fees
+//   - https://docs.substrate.io/main-docs/build/tx-weights-fees/
 //
 // Manually configuring weight is an advanced operation and what you really need may well be
 //   fulfilled by running the benchmarking toolchain. Refer to `benchmarking.rs` file.
@@ -758,8 +758,8 @@ where
 			Some(Call::set_dummy { .. }) => {
 				sp_runtime::print("set_dummy was received.");
 
-				let mut valid_tx = ValidTransaction::default();
-				valid_tx.priority = Bounded::max_value();
+				let valid_tx =
+					ValidTransaction { priority: Bounded::max_value(), ..Default::default() };
 				Ok(valid_tx)
 			},
 			_ => Ok(Default::default()),

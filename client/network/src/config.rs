@@ -21,19 +21,15 @@
 //! The [`Params`] struct is the struct that must be passed in order to initialize the networking.
 //! See the documentation of [`Params`].
 
-pub use crate::{
-	chain::Client,
+pub use sc_network_common::{
+	config::ProtocolId,
 	request_responses::{
 		IncomingRequest, OutgoingResponse, ProtocolConfig as RequestResponseConfig,
 	},
-	warp_request_handler::WarpSyncProvider,
+	sync::warp::WarpSyncProvider,
 };
-pub use libp2p::{build_multiaddr, core::PublicKey, identity};
 
-// Note: this re-export shouldn't be part of the public API of the crate and will be removed in
-// the future.
-#[doc(hidden)]
-pub use crate::protocol::ProtocolConfig;
+pub use libp2p::{build_multiaddr, core::PublicKey, identity};
 
 use crate::ExHashT;
 
@@ -45,7 +41,7 @@ use libp2p::{
 };
 use prometheus_endpoint::Registry;
 use sc_consensus::ImportQueue;
-use sp_consensus::block_validation::BlockAnnounceValidator;
+use sc_network_common::sync::ChainSync;
 use sp_runtime::traits::Block as BlockT;
 use std::{
 	borrow::Cow,
@@ -64,7 +60,11 @@ use std::{
 use zeroize::Zeroize;
 
 /// Network initialization parameters.
-pub struct Params<B: BlockT, H: ExHashT> {
+pub struct Params<B, H, Client>
+where
+	B: BlockT + 'static,
+	H: ExHashT,
+{
 	/// Assigned role for our node (full, light, ...).
 	pub role: Role,
 
@@ -79,7 +79,7 @@ pub struct Params<B: BlockT, H: ExHashT> {
 	pub network_config: NetworkConfiguration,
 
 	/// Client that contains the blockchain.
-	pub chain: Arc<dyn Client<B>>,
+	pub chain: Arc<Client>,
 
 	/// Pool of transactions.
 	///
@@ -96,8 +96,8 @@ pub struct Params<B: BlockT, H: ExHashT> {
 	/// valid.
 	pub import_queue: Box<dyn ImportQueue<B>>,
 
-	/// Type to check incoming block announcements.
-	pub block_announce_validator: Box<dyn BlockAnnounceValidator<B> + Send>,
+	/// Instance of chain sync implementation.
+	pub chain_sync: Box<dyn ChainSync<B>>,
 
 	/// Registry for recording prometheus metrics to.
 	pub metrics_registry: Option<Registry>,
@@ -108,32 +108,32 @@ pub struct Params<B: BlockT, H: ExHashT> {
 	/// protocol name. In addition all of [`RequestResponseConfig`] is used to handle incoming
 	/// block requests, if enabled.
 	///
-	/// Can be constructed either via [`crate::block_request_handler::generate_protocol_config`]
-	/// allowing outgoing but not incoming requests, or constructed via
-	/// [`crate::block_request_handler::BlockRequestHandler::new`] allowing both outgoing and
-	/// incoming requests.
+	/// Can be constructed either via
+	/// `sc_network_sync::block_request_handler::generate_protocol_config` allowing outgoing but
+	/// not incoming requests, or constructed via `sc_network_sync::block_request_handler::
+	/// BlockRequestHandler::new` allowing both outgoing and incoming requests.
 	pub block_request_protocol_config: RequestResponseConfig,
 
 	/// Request response configuration for the light client request protocol.
 	///
 	/// Can be constructed either via
-	/// [`crate::light_client_requests::generate_protocol_config`] allowing outgoing but not
-	/// incoming requests, or constructed via
-	/// [`crate::light_client_requests::handler::LightClientRequestHandler::new`] allowing
-	/// both outgoing and incoming requests.
+	/// `sc_network_light::light_client_requests::generate_protocol_config` allowing outgoing but
+	/// not incoming requests, or constructed via
+	/// `sc_network_light::light_client_requests::handler::LightClientRequestHandler::new`
+	/// allowing both outgoing and incoming requests.
 	pub light_client_request_protocol_config: RequestResponseConfig,
 
 	/// Request response configuration for the state request protocol.
 	///
 	/// Can be constructed either via
-	/// [`crate::block_request_handler::generate_protocol_config`] allowing outgoing but not
-	/// incoming requests, or constructed via
-	/// [`crate::state_request_handler::StateRequestHandler::new`] allowing
+	/// `sc_network_sync::state_request_handler::generate_protocol_config` allowing outgoing but
+	/// not incoming requests, or constructed via
+	/// `sc_network_sync::state_request_handler::StateRequestHandler::new` allowing
 	/// both outgoing and incoming requests.
 	pub state_request_protocol_config: RequestResponseConfig,
 
-	/// Optional warp sync protocol support. Include protocol config and sync provider.
-	pub warp_sync: Option<(Arc<dyn WarpSyncProvider<B>>, RequestResponseConfig)>,
+	/// Optional warp sync protocol config.
+	pub warp_sync_protocol_config: Option<RequestResponseConfig>,
 }
 
 /// Role of the local node.
@@ -141,8 +141,6 @@ pub struct Params<B: BlockT, H: ExHashT> {
 pub enum Role {
 	/// Regular full node.
 	Full,
-	/// Regular light node.
-	Light,
 	/// Actual authority.
 	Authority,
 }
@@ -152,18 +150,12 @@ impl Role {
 	pub fn is_authority(&self) -> bool {
 		matches!(self, Self::Authority { .. })
 	}
-
-	/// True for [`Role::Light`].
-	pub fn is_light(&self) -> bool {
-		matches!(self, Self::Light { .. })
-	}
 }
 
 impl fmt::Display for Role {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		match self {
 			Self::Full => write!(f, "FULL"),
-			Self::Light => write!(f, "LIGHT"),
 			Self::Authority { .. } => write!(f, "AUTHORITY"),
 		}
 	}
@@ -226,29 +218,6 @@ impl<H: ExHashT + Default, B: BlockT> TransactionPool<H, B> for EmptyTransaction
 
 	fn transaction(&self, _h: &H) -> Option<B::Extrinsic> {
 		None
-	}
-}
-
-/// Name of a protocol, transmitted on the wire. Should be unique for each chain. Always UTF-8.
-#[derive(Clone, PartialEq, Eq, Hash)]
-pub struct ProtocolId(smallvec::SmallVec<[u8; 6]>);
-
-impl<'a> From<&'a str> for ProtocolId {
-	fn from(bytes: &'a str) -> ProtocolId {
-		Self(bytes.as_bytes().into())
-	}
-}
-
-impl AsRef<str> for ProtocolId {
-	fn as_ref(&self) -> &str {
-		str::from_utf8(&self.0[..])
-			.expect("the only way to build a ProtocolId is through a UTF-8 String; qed")
-	}
-}
-
-impl fmt::Debug for ProtocolId {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		fmt::Debug::fmt(self.as_ref(), f)
 	}
 }
 
@@ -377,7 +346,7 @@ impl From<multiaddr::Error> for ParseErr {
 }
 
 /// Sync operation mode.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum SyncMode {
 	/// Full block download and verification.
 	Full,

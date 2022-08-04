@@ -31,9 +31,8 @@ pub use error::Error;
 /// Various re-exports from the `hash-db` crate.
 pub use hash_db::{HashDB as HashDBT, EMPTY_PREFIX};
 use hash_db::{Hasher, Prefix};
-pub use memory_db::prefixed_key;
 /// Various re-exports from the `memory-db` crate.
-pub use memory_db::KeyFunction;
+pub use memory_db::{prefixed_key, HashKey, KeyFunction, PrefixedKey};
 /// The Substrate format implementation of `NodeCodec`.
 pub use node_codec::NodeCodec;
 use sp_std::{borrow::Borrow, boxed::Box, marker::PhantomData, vec::Vec};
@@ -281,7 +280,7 @@ where
 	L: TrieConfiguration,
 	DB: hash_db::HashDBRef<L::Hash, trie_db::DBValue>,
 {
-	TrieDB::<L>::new(&*db, root)?.get(key).map(|x| x.map(|val| val.to_vec()))
+	TrieDB::<L>::new(db, root)?.get(key).map(|x| x.map(|val| val.to_vec()))
 }
 
 /// Read a value from the trie with given Query.
@@ -296,7 +295,7 @@ where
 	Q: Query<L::Hash, Item = DBValue>,
 	DB: hash_db::HashDBRef<L::Hash, trie_db::DBValue>,
 {
-	TrieDB::<L>::new(&*db, root)?
+	TrieDB::<L>::new(db, root)?
 		.get_with(key, query)
 		.map(|x| x.map(|val| val.to_vec()))
 }
@@ -355,7 +354,7 @@ pub fn record_all_keys<L: TrieConfiguration, DB>(
 where
 	DB: hash_db::HashDBRef<L::Hash, trie_db::DBValue>,
 {
-	let trie = TrieDB::<L>::new(&*db, root)?;
+	let trie = TrieDB::<L>::new(db, root)?;
 	let iter = trie.iter()?;
 
 	for x in iter {
@@ -380,7 +379,7 @@ pub fn read_child_trie_value<L: TrieConfiguration, DB>(
 where
 	DB: hash_db::HashDBRef<L::Hash, trie_db::DBValue>,
 {
-	let db = KeySpacedDB::new(&*db, keyspace);
+	let db = KeySpacedDB::new(db, keyspace);
 	TrieDB::<L>::new(&db, root)?.get(key).map(|x| x.map(|val| val.to_vec()))
 }
 
@@ -401,7 +400,7 @@ where
 	// root is fetched from DB, not writable by runtime, so it's always valid.
 	root.as_mut().copy_from_slice(root_slice);
 
-	let db = KeySpacedDB::new(&*db, keyspace);
+	let db = KeySpacedDB::new(db, keyspace);
 	TrieDB::<L>::new(&db, &root)?
 		.get_with(key, query)
 		.map(|x| x.map(|val| val.to_vec()))
@@ -502,7 +501,7 @@ where
 	T: Default + PartialEq<T> + for<'b> From<&'b [u8]> + Clone + Send + Sync,
 {
 	fn as_hash_db(&self) -> &dyn hash_db::HashDB<H, T> {
-		&*self
+		self
 	}
 
 	fn as_hash_db_mut<'b>(&'b mut self) -> &'b mut (dyn hash_db::HashDB<H, T> + 'b) {
@@ -555,7 +554,7 @@ mod tests {
 				for (x, y) in input.iter().rev() {
 					t.insert(x, y).unwrap();
 				}
-				t.root().clone()
+				*t.root()
 			};
 			assert_eq!(closed_form, persistent);
 		}
@@ -571,7 +570,7 @@ mod tests {
 			}
 		}
 		{
-			let t = TrieDB::<T>::new(&mut memdb, &root).unwrap();
+			let t = TrieDB::<T>::new(&memdb, &root).unwrap();
 			assert_eq!(
 				input.iter().map(|(i, j)| (i.to_vec(), j.to_vec())).collect::<Vec<_>>(),
 				t.iter()
@@ -752,7 +751,7 @@ mod tests {
 			memtrie.commit();
 			if *memtrie.root() != real {
 				println!("TRIE MISMATCH");
-				println!("");
+				println!();
 				println!("{:?} vs {:?}", memtrie.root(), real);
 				for i in &x {
 					println!("{:#x?} -> {:#x?}", i.0, i.1);
@@ -764,7 +763,7 @@ mod tests {
 			let hashed_null_node = hashed_null_node::<L>();
 			if *memtrie.root() != hashed_null_node {
 				println!("- TRIE MISMATCH");
-				println!("");
+				println!();
 				println!("{:?} vs {:?}", memtrie.root(), hashed_null_node);
 				for i in &x {
 					println!("{:#x?} -> {:#x?}", i.0, i.1);

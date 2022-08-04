@@ -33,7 +33,6 @@ use sp_state_machine::StorageProof;
 
 pub mod block_validation;
 pub mod error;
-pub mod evaluation;
 mod select_chain;
 
 pub use self::error::Error;
@@ -169,7 +168,7 @@ impl ProofRecording for EnableProofRecording {
 	const ENABLED: bool = true;
 
 	fn into_proof(proof: Option<StorageProof>) -> Result<Self::Proof, NoProofRecorded> {
-		proof.ok_or_else(|| NoProofRecorded)
+		proof.ok_or(NoProofRecorded)
 	}
 }
 
